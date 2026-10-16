@@ -161,4 +161,95 @@
   } else {
     imgs.forEach(show);
   }
+
+  /* ---------- 图片查看器（Lightbox） ---------- */
+  var lb = $('#lightbox');
+  if (lb) {
+    var lbImg = $('#lb-img');
+    var lbTitle = $('#lb-title');
+    var lbDesc = $('#lb-desc');
+    var lbLinks = $('#lb-links');
+    var lbCount = $('#lb-count');
+    var items = $$('.gcard[data-item]');
+    var cur = -1;
+
+    function decodeData(attr) {
+      var html = document.createElement('div');
+      html.innerHTML = attr;
+      return html.textContent;
+    }
+
+    function openAt(idx) {
+      if (idx < 0 || idx >= items.length) return;
+      cur = idx;
+      var card = items[idx];
+      var data;
+      try { data = JSON.parse(decodeData(card.getAttribute('data-item'))); }
+      catch (e) { return; }
+      lbImg.src = data.cover || '';
+      lbImg.alt = data.name || '';
+      lbTitle.textContent = data.name || '';
+      lbDesc.textContent = data.desc || '';
+      lbDesc.style.display = data.desc ? '' : 'none';
+      lbCount.textContent = (idx + 1) + ' / ' + items.length;
+      var links = data.links || [];
+      lbLinks.innerHTML = links.length
+        ? links.map(function (l) {
+            return '<a href="' + esc(l.url) + '" target="_blank" rel="noreferrer">' + esc(l.label || '下载') + '</a>';
+          }).join('')
+        : '<span class="lb-nolink">链接待补充</span>';
+      lb.hidden = false;
+      lb.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLb() {
+      lb.hidden = true;
+      lb.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      cur = -1;
+    }
+
+    function next(d) {
+      if (cur < 0) return;
+      var n = cur + d;
+      if (n < 0) n = items.length - 1;
+      if (n >= items.length) n = 0;
+      openAt(n);
+    }
+
+    // 点击封面图打开（含键盘回车/空格）
+    items.forEach(function (card, i) {
+      var trigger = card.querySelector('.cover');
+      card.addEventListener('click', function (e) {
+        if (e.target.closest('.links') || e.target.closest('a')) return;
+        openAt(i);
+      });
+      if (trigger) trigger.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openAt(i); }
+      });
+    });
+
+    // 关闭：点遮罩 / 关闭按钮
+    $$('#lightbox [data-lb-close]').forEach(function (el) {
+      el.addEventListener('click', closeLb);
+    });
+
+    // 上一张 / 下一张
+    var prevBtn = $('.lb-prev');
+    var nextBtn = $('.lb-next');
+    if (prevBtn) prevBtn.addEventListener('click', function () { next(-1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { next(1); });
+
+    // 键盘：Esc 关闭，左右方向键切换
+    document.addEventListener('keydown', function (e) {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') closeLb();
+      else if (e.key === 'ArrowLeft') next(-1);
+      else if (e.key === 'ArrowRight') next(1);
+    });
+
+    // 切换图片时淡入
+    lbImg.addEventListener('load', function () { lbImg.classList.add('on'); });
+  }
 })();

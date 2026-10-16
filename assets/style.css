@@ -164,6 +164,15 @@ header {
 .gcard .cover { position: relative; aspect-ratio: 4 / 3; background: var(--bg); }
 .gcard .cover img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .35s; }
 .gcard .cover img.on { opacity: 1; }
+.gcard .cover .zoom-hint {
+  position: absolute; right: 8px; bottom: 8px; width: 26px; height: 26px;
+  display: grid; place-items: center; background: rgba(43, 43, 43, .5);
+  border-radius: 7px; color: #fff; opacity: 0; transition: .2s; pointer-events: none;
+}
+.gcard .cover .zoom-hint svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.gcard .cover { cursor: zoom-in; }
+.gcard .cover:hover .zoom-hint { opacity: 1; }
+.gcard .cover:hover img { opacity: 1; }
 .gcard .no { position: absolute; top: 8px; left: 8px; font-size: 11.5px; color: #fff; background: rgba(43, 43, 43, .62); border-radius: 6px; padding: 1px 7px; }
 .gcard .body { padding: 12px 13px 14px; flex: 1; display: flex; flex-direction: column; }
 .gcard h3 { font-size: 14.5px; font-weight: 600; line-height: 1.45; }
@@ -229,4 +238,72 @@ footer { border-top: 1px solid var(--line); padding: 22px 0 34px; font-size: 12.
     background: none; border: 0; border-radius: 10px; padding: 10px 14px; cursor: pointer;
   }
   .drawer a:hover, .drawer button:hover { background: var(--accent-soft); color: var(--accent); }
+}
+
+/* ---------- lightbox（图片查看器） ---------- */
+.lightbox {
+  position: fixed; inset: 0; z-index: 200; display: flex;
+  align-items: center; justify-content: center; padding: 24px;
+}
+.lightbox[hidden] { display: none; }
+.lb-backdrop { position: absolute; inset: 0; background: rgba(20, 20, 20, .72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+
+.lb-stage {
+  position: relative; z-index: 1; display: flex; align-items: stretch;
+  width: min(1040px, 100%); max-height: calc(100vh - 48px);
+  background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 30px 80px rgba(0, 0, 0, .35);
+}
+
+.lb-figure {
+  position: relative; flex: 1; min-width: 0; background: #141414;
+  display: flex; align-items: center; justify-content: center;
+}
+.lb-figure img {
+  max-width: 100%; max-height: calc(100vh - 48px); object-fit: contain;
+  opacity: 0; transition: opacity .25s;
+}
+.lb-figure img.on { opacity: 1; }
+.lb-count {
+  position: absolute; left: 12px; bottom: 12px; font-size: 12px; color: #fff;
+  background: rgba(0, 0, 0, .5); border-radius: 6px; padding: 2px 8px;
+}
+
+.lb-panel {
+  width: 320px; flex-shrink: 0; display: flex; flex-direction: column;
+  padding: 22px 20px; position: relative; overflow: auto;
+}
+.lb-x {
+  position: absolute; top: 12px; right: 12px; width: 32px; height: 32px;
+  display: grid; place-items: center; background: var(--bg); border: 1px solid var(--line);
+  border-radius: 9px; cursor: pointer; color: var(--muted); transition: .16s;
+}
+.lb-x:hover { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
+.lb-x svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+.lb-info h3 { font-size: 17px; font-weight: 600; line-height: 1.4; padding-right: 36px; }
+.lb-info p { margin-top: 10px; font-size: 13.5px; color: var(--muted); line-height: 1.7; word-break: break-word; }
+
+.lb-links { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+.lb-links a {
+  font-size: 13px; color: #fff; background: var(--accent); border-radius: 8px;
+  padding: 7px 16px; transition: .16s;
+}
+.lb-links a:hover { background: #a83d33; }
+.lb-links .lb-nolink { font-size: 13px; color: var(--hint); }
+
+.lb-nav {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+  width: 40px; height: 40px; display: grid; place-items: center;
+  background: rgba(255, 255, 255, .18); border: 0; border-radius: 50%;
+  cursor: pointer; color: #fff; transition: .16s;
+}
+.lb-nav:hover { background: rgba(255, 255, 255, .32); }
+.lb-nav svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.lb-prev { left: 12px; }
+.lb-next { right: 12px; }
+
+@media (max-width: 720px) {
+  .lb-stage { flex-direction: column; max-height: calc(100vh - 32px); }
+  .lb-figure img { max-height: 48vh; }
+  .lb-panel { width: auto; flex-shrink: 1; }
+  .lb-nav { top: 24vh; }
 }
