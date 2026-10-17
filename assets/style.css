@@ -337,3 +337,6 @@ footer { border-top: 1px solid var(--line); padding: 22px 0 34px; font-size: 12.
 }
 .twikoo-box .el-button--primary { background: var(--accent); border-color: var(--accent); }
 .twikoo-box .el-button--primary:hover { background: #a83d33; border-color: #a83d33; }
+
+/* 隐藏评论框的「网址」输入栏（第三栏） */
+.twikoo-box .tk-meta-input .tk-meta-input__item[name="link"] { display: none !important; }
