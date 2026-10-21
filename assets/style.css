@@ -182,6 +182,36 @@ header {
 .gcard .body { padding: 12px 13px 14px; flex: 1; display: flex; flex-direction: column; }
 .gcard h3 { font-size: 14.5px; font-weight: 600; line-height: 1.45; }
 .gcard .desc { font-size: 12.5px; color: var(--muted); margin-top: 6px; flex: 1; }
+.gcard { scroll-margin-top: 84px; }
+.gcard.flash { border-color: var(--accent-line); box-shadow: 0 0 0 2px var(--accent-line); }
+
+/* ---------- 分页 ---------- */
+.pager { display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 4px 0 56px; }
+.pager[hidden] { display: none; }
+.pager-in { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; }
+.pg-nums { display: flex; align-items: center; gap: 6px; }
+.pg-btn, .pg-num {
+  font: inherit; font-size: 13px; line-height: 1; color: var(--muted); cursor: pointer;
+  background: #fff; border: 1px solid var(--line); border-radius: 9px; padding: 9px 13px; transition: .16s;
+}
+.pg-num { min-width: 38px; text-align: center; padding: 9px 10px; }
+.pg-btn:hover:not(:disabled), .pg-num:hover:not(.on) {
+  color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft);
+}
+.pg-num.on {
+  color: #fff; background: var(--accent); border-color: var(--accent);
+  font-weight: 600; cursor: default;
+}
+.pg-btn:disabled { opacity: .45; cursor: default; }
+.pg-gap { color: var(--hint); font-size: 13px; padding: 0 2px; }
+.pg-info { font-size: 12.5px; color: var(--hint); }
+.pager-noscript { font-size: 13px; color: var(--hint); text-align: center; padding: 10px 0 22px; }
+
+@media (max-width: 520px) {
+  .pg-btn { padding: 9px 10px; }
+  .pg-num { min-width: 32px; }
+}
+
 .links { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 11px; }
 .links a {
   font-size: 12.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 8px;
