@@ -291,11 +291,12 @@
     lbImg.addEventListener('load', function () { lbImg.classList.add('on'); });
   }
 
-  /* ---------- 合集详情页分页 ---------- */
+  /* ---------- 合集详情页分页（顶部 + 底部两份导航共用一套状态） ---------- */
   var glist = $('.glist');
-  var pagerEl = $('#pager');
-  if (glist && pagerEl) {
+  var pagerEls = $$('.pager[data-total]');
+  if (glist && pagerEls.length) {
     (function () {
+      var pagerEl = pagerEls[0];
       var per = parseInt(pagerEl.getAttribute('data-per'), 10) || 50;
       var total = parseInt(pagerEl.getAttribute('data-total'), 10) || glist.children.length;
       var slug = pagerEl.getAttribute('data-slug') || '';
@@ -312,7 +313,10 @@
       pagerState.pages = pageCount;
       pagerState.page = 1;
 
-      pagerEl.hidden = false;
+      pagerEls.forEach(function (el) { el.hidden = false; });
+
+      /* 翻页后滚到列表上方：优先对齐顶部那份导航，本页没有顶部导航时退回列表顶部 */
+      var anchorEl = $('.pager-top', document) || glist;
 
       /* 懒加载后续分页数据：只有点页码 / 带锚点进入时才请求 */
       function load(cb) {
@@ -357,7 +361,7 @@
       }
 
       function scrollToTop() {
-        var top = glist.getBoundingClientRect().top + (window.pageYOffset || 0) - 76;
+        var top = anchorEl.getBoundingClientRect().top + (window.pageYOffset || 0) - 76;
         try { window.scrollTo({ top: top < 0 ? 0 : top, behavior: 'smooth' }); }
         catch (e) { window.scrollTo(0, top < 0 ? 0 : top); }
       }
@@ -378,7 +382,9 @@
         }
         load(function () {
           if (!render(p)) {
-            pagerEl.innerHTML = '<p class="pager-noscript">分页数据加载失败，刷新页面重试。</p>';
+            pagerEls.forEach(function (el) {
+              el.innerHTML = '<p class="pager-noscript">分页数据加载失败，刷新页面重试。</p>';
+            });
             return;
           }
           if (done) done(); else { hashPage(p); scrollToTop(); }
@@ -407,22 +413,26 @@
           return '<button class="pg-num' + (n === cur ? ' on' : '') + '" type="button" data-pg="' + n + '"' +
             (n === cur ? ' aria-current="page"' : '') + '>' + n + '</button>';
         }).join('');
-        pagerEl.innerHTML =
+        var html =
           '<div class="pager-in">' +
             '<button class="pg-btn" type="button" data-pg="prev"' + (cur === 1 ? ' disabled' : '') + '>上一页</button>' +
             '<span class="pg-nums">' + nums + '</span>' +
             '<button class="pg-btn" type="button" data-pg="next"' + (cur === pageCount ? ' disabled' : '') + '>下一页</button>' +
           '</div>' +
           '<div class="pg-info">第 ' + cur + ' / ' + pageCount + ' 页 · 每页 ' + per + ' 款 · 共 ' + total + ' 款</div>';
+        pagerEls.forEach(function (el) { el.innerHTML = html; });
       }
 
-      pagerEl.addEventListener('click', function (e) {
-        var b = e.target.closest('[data-pg]');
-        if (!b || b.disabled) return;
-        var v = b.getAttribute('data-pg');
-        if (v === 'prev') go(cur - 1);
-        else if (v === 'next') go(cur + 1);
-        else go(parseInt(v, 10));
+      /* 顶部、底部两份导航都绑同一套点击逻辑 */
+      pagerEls.forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          var b = e.target.closest('[data-pg]');
+          if (!b || b.disabled) return;
+          var v = b.getAttribute('data-pg');
+          if (v === 'prev') go(cur - 1);
+          else if (v === 'next') go(cur + 1);
+          else go(parseInt(v, 10));
+        });
       });
 
       drawNav();
