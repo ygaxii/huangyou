@@ -32,7 +32,7 @@
   <div class="page-main">
     <div class="breadcrumb"><a href="index.html">首页</a><span>/</span><span>求游戏</span></div>
     <div class="section-head">
-      <div id="comments"></div><h1 class="section-title" style="margin:0">求游戏区域</h1>
+      <h1 class="section-title" style="margin:0">求游戏区域</h1>
       <span class="pill">共 11 款</span>
     </div>
     <section class="notice">
@@ -230,6 +230,40 @@
       </span>
     </span>
   </a></div>
+
+    <section class="comments-card" id="comments">
+  <div class="comments-head">
+    <span class="section-title" style="margin:0">留言区</span>
+    <span class="comments-sub">想要什么 / 打不开 / 报错，都写这儿</span>
+  </div>
+  <div id="tcomment" class="twikoo-box"></div>
+</section>
+<script>
+(function () {
+  var box = document.getElementById('tcomment');
+  if (!box) return;
+  var opts = {"envId":"https://fastidious-bubblegum-241b3e.netlify.app/.netlify/functions/twikoo","el":"#tcomment","path":"comments","url":"https://ygaxii.github.io/huangyou/qiuyou.html","lang":"zh-CN"};
+  function start() {
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/twikoo@2.0.15/dist/twikoo.all.min.js';
+    s.async = true;
+    s.onload = function () {
+      try { twikoo.init(opts); }
+      catch (e) { box.innerHTML = '<div class="c-empty">评论区初始化失败，刷新试试。</div>'; }
+    };
+    s.onerror = function () {
+      box.innerHTML = '<div class="c-empty">评论区加载失败：连不上评论服务，开个加速器再刷新。</div>';
+    };
+    document.head.appendChild(s);
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      for (var i = 0; i < es.length; i++) { if (es[i].isIntersecting) { io.disconnect(); start(); return; } }
+    }, { rootMargin: '300px' });
+    io.observe(box);
+  } else { start(); }
+})();
+</script>
   </div>
   <aside class="page-side">
   <div class="side-card">

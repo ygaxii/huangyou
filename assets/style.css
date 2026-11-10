@@ -147,7 +147,7 @@ input { font: inherit; }
 .btn-ghost:hover { border-color: var(--purple-2); color: var(--purple); }
 
 /* ---------------- 主体两栏 ---------------- */
-.page { display: flex; gap: 24px; align-items: flex-start; padding: 24px 0 60px; }
+.page { display: flex; gap: 24px; align-items: flex-start; padding: 24px 20px 60px; }
 .page-main { flex: 1; min-width: 0; }
 .page-side { width: 340px; flex-shrink: 0; position: sticky; top: calc(var(--header-h) + 20px); }
 
@@ -463,3 +463,20 @@ input { font: inherit; }
   .notice { padding: 14px 14px; }
   .side-card { padding: 14px; }
 }
+/* ---------------- 留言区（Twikoo） ---------------- */
+.comments-card {
+  margin-top: 26px; background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px 22px 24px;
+}
+.comments-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.comments-sub { font-size: 12.5px; color: var(--muted); }
+.twikoo-box { min-height: 80px; }
+.twikoo-box .c-empty { color: var(--muted); font-size: 13px; padding: 10px 0; }
+
+[data-theme="dark"] .twikoo .tk-content,
+[data-theme="dark"] .twikoo .tk-nick,
+[data-theme="dark"] .twikoo .tk-comments-title,
+[data-theme="dark"] .twikoo .tk-action-link { color: var(--text); }
+[data-theme="dark"] .twikoo .tk-input textarea,
+[data-theme="dark"] .twikoo .tk-input input { background: var(--panel-2); color: var(--text); border-color: var(--line-2); }
+[data-theme="dark"] .twikoo .tk-comment { border-color: var(--line); }
