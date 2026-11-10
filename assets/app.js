@@ -69,6 +69,7 @@
     var shown = 0;
     var currentTab = 'all';
     var keyword = '';
+    var tagFilter = '';
 
     var matchTab = function (card) {
       if (currentTab === 'all') return true;
@@ -77,9 +78,13 @@
       return tags.indexOf(currentTab) >= 0;
     };
     var matchKeyword = function (card) {
-      if (!keyword) return true;
-      var hay = (card.getAttribute('data-name') || '').toLowerCase();
-      return hay.indexOf(keyword) >= 0;
+      if (tagFilter) {                       // 侧栏标签云：按标签精确匹配，和标签上的数字对得上
+        var tags = (card.getAttribute('data-tags') || '').split(/\s+/);
+        return tags.indexOf(tagFilter) >= 0;
+      }
+      if (!keyword) return true;             // 搜索框：按名字模糊匹配
+      var hay = (card.getAttribute('data-name') || '') + ' ' + (card.getAttribute('data-tags') || '');
+      return hay.toLowerCase().indexOf(keyword) >= 0;
     };
 
     var moreWrap = document.querySelector('.load-more-wrap');
@@ -110,6 +115,7 @@
         tabs.forEach(function (x) { x.classList.remove('is-active'); });
         t.classList.add('is-active');
         currentTab = t.getAttribute('data-tab');
+        tagFilter = ''; keyword = ''; if (input) input.value = '';
         apply(true);
       });
     });
@@ -120,11 +126,25 @@
       input.addEventListener('input', function () {
         clearTimeout(t0);
         t0 = setTimeout(function () {
+          tagFilter = '';                       // 手动输入就切回模糊搜索
           keyword = input.value.trim().toLowerCase();
           apply(true);
         }, 120);
       });
     }
+
+    // 侧栏「分类云」：点一下等于按这个标签筛选（再点一次取消）
+    Array.prototype.forEach.call(document.querySelectorAll('[data-q]'), function (a) {
+      a.addEventListener('click', function (ev) {
+        ev.preventDefault();
+        var q = a.getAttribute('data-q') || '';
+        if (tagFilter === q) { tagFilter = ''; if (input) input.value = ''; }
+        else { tagFilter = q; keyword = ''; if (input) input.value = q; }
+        apply(true);
+        var tabsEl = document.getElementById('all');
+        if (tabsEl) tabsEl.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      });
+    });
 
     apply(true);
 
