@@ -464,6 +464,7 @@ input { font: inherit; }
   .side-card { padding: 14px; }
 }
 /* ---------------- 留言区（Twikoo） ---------------- */
+#comments { scroll-margin-top: 84px; }
 .comments-card {
   margin-top: 26px; background: var(--panel); border: 1px solid var(--line);
   border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px 22px 24px;
