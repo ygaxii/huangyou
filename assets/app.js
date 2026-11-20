@@ -174,3 +174,83 @@
     }
   }
 })();
+
+
+/* ---------------- 官方 Q 群广告：点击复制群号 ---------------- */
+(function () {
+  var nodes = Array.prototype.slice.call(document.querySelectorAll('[data-qq]'));
+  if (!nodes.length) return;
+
+  function legacyCopy(text) {
+    return new Promise(function (resolve, reject) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, ta.value.length);
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      ok ? resolve() : reject(new Error('copy failed'));
+    });
+  }
+
+  function copyText(text) {
+    // 优先用剪贴板 API（无权限时静默降级到 execCommand，保证点了就有反馈）
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).catch(function () { return legacyCopy(text); });
+    }
+    return legacyCopy(text);
+  }
+
+  function selectNumber(el) {
+    var num = el.querySelector('.ad-num') || el.querySelector('.ad-float-text b');
+    if (!num) return;
+    try {
+      var range = document.createRange();
+      range.selectNodeContents(num);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } catch (e) {}
+  }
+
+  nodes.forEach(function (el) {
+    el.addEventListener('click', function (ev) {
+      if (ev.target && ev.target.className && String(ev.target.className).indexOf('ad-float-close') >= 0) return;
+      var q = el.getAttribute('data-qq');
+      var cta = el.querySelector('.ad-cta');
+      var ft = el.querySelector('.ad-float-text');
+      var oldCta = cta ? cta.textContent : '';
+      var oldFt = ft ? ft.innerHTML : '';
+
+      var show = function (ok) {
+        el.classList.toggle('is-copied', ok);
+        var txt = ok ? '已复制 ✓' : '请按 Ctrl+C';
+        if (cta) cta.textContent = txt;
+        if (ft) ft.innerHTML = txt;
+        if (!ok) selectNumber(el);            // 复制被拦时，直接把群号选中，Ctrl+C 就行
+        setTimeout(function () {
+          if (cta) cta.textContent = oldCta;
+          if (ft) ft.innerHTML = oldFt;
+          el.classList.remove('is-copied');
+        }, 1800);
+      };
+
+      copyText(q).then(function () { show(true); }).catch(function () { show(false); });
+    });
+  });
+
+  var fl = document.getElementById('qqFloat');
+  if (fl) {
+    try { if (localStorage.getItem('yg-qq-float') === 'off') fl.style.display = 'none'; } catch (e) {}
+    var close = fl.querySelector('.ad-float-close');
+    if (close) close.addEventListener('click', function (e) {
+      e.stopPropagation();
+      fl.style.display = 'none';
+      try { localStorage.setItem('yg-qq-float', 'off'); } catch (err) {}
+    });
+  }
+})();
