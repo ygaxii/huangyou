@@ -514,11 +514,25 @@ input { font: inherit; }
 .ad-float:hover { transform: translateY(-2px); }
 .ad-float-text b { font-size: 14px; }
 .ad-float-close {
-  background: transparent; border: 0; color: rgba(255,255,255,.8);
-  font-size: 16px; line-height: 1; padding: 0 2px; cursor: pointer;
+  width: 26px; height: 26px; margin: 0 -4px 0 2px;
+  display: grid; place-items: center;
+  background: rgba(255,255,255,.16); border: 0; border-radius: 50%;
+  color: rgba(255,255,255,.92); font-size: 15px; line-height: 1;
+  cursor: pointer; touch-action: manipulation;
 }
 .ad-float.is-copied { background: linear-gradient(100deg, #059669, #10b981); }
 
 @media (max-width: 560px) {
           .ad-float { right: 12px; bottom: 14px; padding: 8px 12px; font-size: 12px; }
+}
+
+@media (max-width: 560px) {
+  .ad-float {
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    padding-right: 8px;
+  }
+  .ad-float-close {
+    width: 40px; height: 40px; margin: 0 -8px 0 0;
+    font-size: 19px;
+  }
 }

@@ -205,6 +205,8 @@
     return legacyCopy(text);
   }
 
+  var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
   function selectNumber(el) {
     var num = el.querySelector('.ad-num') || el.querySelector('.ad-float-text b');
     if (!num) return;
@@ -228,7 +230,7 @@
 
       var show = function (ok) {
         el.classList.toggle('is-copied', ok);
-        var txt = ok ? '已复制 ✓' : '请按 Ctrl+C';
+        var txt = ok ? '已复制 ✓' : isTouch ? '长按群号复制' : '请按 Ctrl+C';
         if (cta) cta.textContent = txt;
         if (ft) ft.innerHTML = txt;
         if (!ok) selectNumber(el);            // 复制被拦时，直接把群号选中，Ctrl+C 就行
@@ -247,10 +249,16 @@
   if (fl) {
     try { if (localStorage.getItem('yg-qq-float') === 'off') fl.style.display = 'none'; } catch (e) {}
     var close = fl.querySelector('.ad-float-close');
-    if (close) close.addEventListener('click', function (e) {
-      e.stopPropagation();
-      fl.style.display = 'none';
-      try { localStorage.setItem('yg-qq-float', 'off'); } catch (err) {}
-    });
+    if (close) {
+      var hideFloat = function (e) {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        fl.style.display = 'none';
+        try { localStorage.setItem('yg-qq-float', 'off'); } catch (err) {}
+      };
+      close.addEventListener('click', hideFloat);
+      close.addEventListener('touchend', hideFloat, { passive: false });
+      // 手指按在 × 上时也不要触发底下的「复制群号」
+      close.addEventListener('touchstart', function (e) { e.stopPropagation(); }, { passive: true });
+    }
   }
 })();
