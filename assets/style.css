@@ -496,34 +496,7 @@ input { font: inherit; }
 .desc-list li:last-child { margin-bottom: 0; }
 
 /* ---------------- 广告位：官方 Q 群 ---------------- */
-.ad-banner {
-  position: relative; display: flex; align-items: center; gap: 14px;
-  padding: 15px 18px; margin: 0 0 22px; border-radius: 16px;
-  background: linear-gradient(100deg, #7c3aed 0%, #a855f7 45%, #ec4899 100%);
-  color: #fff; box-shadow: 0 10px 30px rgba(168, 85, 247, .35);
-  cursor: pointer; overflow: hidden;
-  transition: transform .15s, box-shadow .15s;
-}
-.ad-banner::after {
-  content: ""; position: absolute; top: 0; left: -45%; width: 35%; height: 100%;
-  background: linear-gradient(100deg, transparent, rgba(255,255,255,.38), transparent);
-  transform: skewX(-18deg); animation: adSweep 4.5s ease-in-out infinite;
-}
 @keyframes adSweep { 0%, 55% { left: -45%; } 85%, 100% { left: 115%; } }
-.ad-banner:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(168, 85, 247, .45); }
-.ad-badge {
-  font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px;
-  background: rgba(255,255,255,.22); white-space: nowrap;
-}
-.ad-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
-.ad-title { font-weight: 700; font-size: 15px; }
-.ad-sub { font-size: 13px; color: rgba(255,255,255,.88); }
-.ad-num { font-size: 16px; letter-spacing: .5px; }
-.ad-cta {
-  font-size: 13px; font-weight: 700; padding: 8px 16px; border-radius: 999px;
-  background: #fff; color: #7c3aed; white-space: nowrap; transition: background .15s, color .15s;
-}
-.ad-banner.is-copied .ad-cta { background: #10b981; color: #fff; }
 
 .ad-float {
   position: fixed; right: 18px; bottom: 22px; z-index: 80;
@@ -547,9 +520,5 @@ input { font: inherit; }
 .ad-float.is-copied { background: linear-gradient(100deg, #059669, #10b981); }
 
 @media (max-width: 560px) {
-  .ad-banner { padding: 12px 14px; gap: 10px; }
-  .ad-title { font-size: 13.5px; }
-  .ad-sub { font-size: 12px; }
-  .ad-cta { padding: 7px 12px; font-size: 12px; }
-  .ad-float { right: 12px; bottom: 14px; padding: 8px 12px; font-size: 12px; }
+          .ad-float { right: 12px; bottom: 14px; padding: 8px 12px; font-size: 12px; }
 }
