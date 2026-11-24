@@ -536,3 +536,33 @@ input { font: inherit; }
     font-size: 19px;
   }
 }
+
+/* ---------------- 发售日期徽章 ---------------- */
+.post-date {
+  position: absolute; right: 8px; bottom: 8px;
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; line-height: 1; letter-spacing: .2px;
+  color: #fff; background: rgba(20, 14, 38, .66);
+  border: 1px solid rgba(255, 255, 255, .22);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  white-space: nowrap; pointer-events: none;
+}
+.post-date svg { opacity: .92; }
+.post-date.is-release {
+  background: linear-gradient(100deg, #7c3aed, #ec4899);
+  border-color: rgba(255, 255, 255, .35);
+  box-shadow: 0 4px 14px rgba(236, 72, 153, .45);
+}
+.pill-date { background: var(--grad); color: #fff; border-color: transparent; font-weight: 700; }
+
+@media (max-width: 560px) {
+  .post-date { font-size: 10px; padding: 2px 6px; right: 6px; bottom: 6px; gap: 3px; }
+  .post-date svg { width: 9px; height: 9px; }
+}
+.hero-date {
+  color: #fff; font-weight: 700;
+  padding: 1px 7px; border-radius: 999px;
+  background: linear-gradient(100deg, #7c3aed, #ec4899);
+  font-size: 12px; white-space: nowrap;
+}
