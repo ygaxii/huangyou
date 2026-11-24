@@ -148,30 +148,6 @@
 
     apply(true);
 
-    /* ---------------- 随机推荐 ---------------- */
-    var randList = document.getElementById('randomList');
-    var dataEl = document.getElementById('gameIndex');
-    var shuffleBtn = document.getElementById('shuffleBtn');
-    if (randList && dataEl) {
-      var all = [];
-      try { all = JSON.parse(dataEl.textContent || '[]'); } catch (e) {}
-      var renderRandom = function () {
-        if (!all.length) return;
-        var pool = all.slice();
-        var pick = [];
-        for (var i = 0; i < 6 && pool.length; i++) {
-          pick.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
-        }
-        randList.innerHTML = pick.map(function (g) {
-          return '<a class="rank-item" href="' + g.u + '">' +
-            '<span class="rank-thumb"><img loading="lazy" src="' + g.c + '" alt=""></span>' +
-            '<span class="rank-main"><span class="rank-title">' + g.n + '</span>' +
-            '<span class="rank-meta"><span>' + g.t + '</span></span></span></a>';
-        }).join('');
-      };
-      renderRandom();
-      if (shuffleBtn) shuffleBtn.addEventListener('click', renderRandom);
-    }
   }
 })();
 
